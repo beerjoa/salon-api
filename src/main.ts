@@ -12,7 +12,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({
     exposeHeadRoutes: true,
-    logger: true,
+    logger: false,
   });
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
