@@ -8,7 +8,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({
     exposeHeadRoutes: true,
@@ -18,7 +19,8 @@ async function bootstrap() {
     AppModule,
     fastifyAdapter,
   );
-
+  const configService = app.get(ConfigService);
+  const swaggerConfig = configService.get('swagger');
   await app.register(helmet, {
     global: true,
   });
@@ -38,6 +40,7 @@ async function bootstrap() {
       forbidUnknownValues: true,
       transformOptions: {
         enableImplicitConversion: true,
+        exposeDefaultValues: true,
       },
     }),
   );
@@ -48,6 +51,17 @@ async function bootstrap() {
       exposeUnsetFields: false,
     }),
   );
+
+  const swaggerDocumentBuilder = new DocumentBuilder()
+    .setTitle(swaggerConfig.title)
+    .setDescription(swaggerConfig.description)
+    .setVersion(swaggerConfig.version)
+    .addServer(swaggerConfig.server.url, swaggerConfig.server.description)
+    .addTag('salons', 'Operations related to salons')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerDocumentBuilder);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
