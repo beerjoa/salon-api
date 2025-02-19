@@ -91,6 +91,7 @@ export class SalonsService {
       timezone_identifier,
       days = 1,
       timeslot_interval = 1800, // 30 minutes
+      is_ignore_schedule = false,
     } = body;
 
     const dayTimetables: DayTimetable[] = [];
@@ -122,6 +123,7 @@ export class SalonsService {
           businessHours,
           timeslot_interval,
           service_duration,
+          is_ignore_schedule,
         );
       }
 
@@ -176,17 +178,19 @@ export class SalonsService {
    * 영업시간 내 예약 가능한 타임슬롯 계산
    *
    * - 예약 시작 시간에 서비스 소요 시간(service_duration)을 더한 시간이 영업 마감 시간 이내여야 함
-   * - 예약 시간 간격([start, start + service_duration])이 기존 예약 이벤트와 겹치지 않아야 함
+   * - is_ignore_schedule가 false인 경우 예약 시간 간격([start, start + service_duration])이 기존 예약 이벤트와 겹치지 않아야 함
    *
    * @param businessHours - 영업시간의 시작 및 마감 시간
    * @param slotInterval - 각 후보 타임슬롯 간격 (초)
    * @param serviceDuration - 예약 서비스 소요 시간 (초)
+   * @param ignoreSchedule - 이벤트 데이터를 고려할지 여부 (true면 무시)
    * @returns 예약 가능한 타임슬롯 배열
    */
   private calculateTimeSlotsForBusinessHours(
     businessHours: TBusinessHours,
     slotInterval: number,
     serviceDuration: number,
+    ignoreSchedule: boolean,
   ): Timeslot[] {
     const timeslots: Timeslot[] = [];
     let candidateTime: DateTime = businessHours.openTime;
@@ -198,8 +202,11 @@ export class SalonsService {
       const candidateFinish: DateTime = candidateTime.plus({
         seconds: serviceDuration,
       });
-      // 이미 예약된 이벤트와 겹치는지 확인 (겹치지 않을 경우에만 타임슬롯 추가)
-      if (this.isTimeSlotAvailable(candidateTime, candidateFinish)) {
+      // is_ignore_schedule가 true이면 이벤트 검사를 하지 않고, false일 경우 이벤트와 겹치는지 체크
+      if (
+        ignoreSchedule ||
+        this.isTimeSlotAvailable(candidateTime, candidateFinish)
+      ) {
         timeslots.push({
           begin_at: candidateTime.toSeconds(),
           end_at: candidateFinish.toSeconds(),
