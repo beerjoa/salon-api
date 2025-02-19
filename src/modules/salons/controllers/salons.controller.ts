@@ -1,10 +1,10 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { SalonsService } from '##salons/services/salons.service';
-import { GetTimeSlotsRequestDto } from '##salons/dto/request/get-time-slots.request.dto';
 import { DayTimetableDto } from '##salons/dto/day-timetable.dto';
+import { GetTimeSlotsRequestDto } from '##salons/dto/request/get-time-slots.request.dto';
 import { GetTimeSlotsResponseDto } from '##salons/dto/response/get-time-slots.response.dto';
+import { SalonsService } from '##salons/services/salons.service';
 
 /**
  * Controller for Salons

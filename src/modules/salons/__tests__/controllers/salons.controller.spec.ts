@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { SalonsController } from '##salons/controllers/salons.controller';
 import { SalonsService } from '##salons/services/salons.service';
 

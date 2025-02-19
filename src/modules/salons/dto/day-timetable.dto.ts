@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import {
   IsArray,
@@ -6,18 +7,12 @@ import {
   IsNumber,
   ValidateNested,
 } from 'class-validator';
-import { Timeslot, TimeslotDto } from './timeslot.dto';
-import { ApiProperty } from '@nestjs/swagger';
-import { EDayModifier } from '##salons/services/salons.service';
 
-export interface DayTimetable {
-  start_of_day: number; // Unixstamp seconds
-  day_modifier: number;
-  is_day_off: boolean;
-  timeslots: Timeslot[];
-}
+import { TimeslotDto } from '##salons/dto/timeslot.dto';
+import type { TDayTimetable } from '##salons/types/day-timetable.type';
+import { EDayOfTheWeekModifier } from '##salons/types/work-hour.type';
 
-export class DayTimetableDto implements DayTimetable {
+export class DayTimetableDto implements TDayTimetable {
   @ApiProperty({
     description: '시작일 식별자',
     example: 1713033600,
@@ -31,7 +26,7 @@ export class DayTimetableDto implements DayTimetable {
     example: 1,
   })
   @Expose()
-  @IsEnum(EDayModifier)
+  @IsEnum(EDayOfTheWeekModifier)
   day_modifier: number;
 
   @ApiProperty({

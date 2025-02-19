@@ -1,83 +1,21 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { join } from 'path';
-import { readFileSync } from 'fs';
 
 import { GetTimeSlotsRequestDto } from '##salons/dto/request/get-time-slots.request.dto';
-import { DayTimetable } from '##salons/dto/day-timetable.dto';
-import { Timeslot } from '##salons/dto/timeslot.dto';
-
-/**
- * 요일 문자열 매핑
- */
-export type TDay = 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat';
-
-/**
- * 요일 식별자 Enum
- */
-export enum EDayModifier {
-  sun = 1,
-  mon = 2,
-  tue = 3,
-  wed = 4,
-  thu = 5,
-  fri = 6,
-  sat = 7,
-}
-
-/**
- * 이벤트 데이터 타입
- * @type {Object} TEvent
- * @property {number} begin_at - 이벤트 시작 시간 (Unix 타임스탬프)
- * @property {number} end_at - 이벤트 종료 시간 (Unix 타임스탬프)
- * @property {number} created_at - 이벤트 생성 시간 (Unix 타임스탬프)
- * @property {number} updated_at - 이벤트 업데이트 시간 (Unix 타임스탬프)
- */
-export type TEvent = {
-  begin_at: number;
-  end_at: number;
-  created_at: number;
-  updated_at: number;
-};
-
-/**
- * 영업시간 데이터 타입
- * @type {Object} TWorkHour
- * @property {number} close_interval - 영업시간 종료 시간 (Unix 타임스탬프)
- * @property {boolean} is_day_off - 휴무일 여부
- * @property {string} key - 요일 식별자
- * @property {number} open_interval - 영업시간 시작 시간 (Unix 타임스탬프)
- * @property {number} weekday - 요일 식별자
- */
-export type TWorkHour = {
-  close_interval: number;
-  is_day_off: boolean;
-  key: TDay;
-  open_interval: number;
-  weekday: EDayModifier;
-};
-
-/**
- * 영업시간 시작/종료 시간 타입
- * @type {Object} TBusinessHours
- * @property {DateTime} openTime - 영업시간 시작 시간
- * @property {DateTime} closeTime - 영업시간 종료 시간
- */
-export type TBusinessHours = {
-  openTime: DateTime;
-  closeTime: DateTime;
-};
-
-/**
- * 비즈니스 시간 정보 타입 - 영업시간과 휴무 여부 포함
- * @type {Object} TBusinessHoursInfo
- * @property {TBusinessHours} businessHours - 영업시간 정보
- * @property {boolean} isDayOff - 휴무 여부
- */
-export type TBusinessHoursInfo = {
-  businessHours: TBusinessHours;
-  isDayOff: boolean;
-};
+import {
+  TBusinessHours,
+  TBusinessHoursInfo,
+} from '##salons/types/business-hour.type';
+import type { TDayTimetable } from '##salons/types/day-timetable.type';
+import type { TEvent } from '##salons/types/event.type';
+import type { TTimeslot } from '##salons/types/timeslot.type';
+import type {
+  EDayOfTheWeekModifier,
+  TWorkHour,
+} from '##salons/types/work-hour.type';
 
 /**
  * 살롱 서비스
@@ -107,10 +45,10 @@ export class SalonsService {
    * @description 요청 날짜 및 옵션에 따라 타임슬롯을 계산하여 반환
    *
    * @param {GetTimeSlotsRequestDto} body - 요청 파라미터
-   * @returns {Array<DayTimetable>} 각 날짜별 타임슬롯 배열
+   * @returns {Array<TDayTimetable>} 각 날짜별 타임슬롯 배열
    */
-  public getTimeSlots(body: GetTimeSlotsRequestDto): Array<DayTimetable> {
-    const dayTimetables: Array<DayTimetable> = [];
+  public getTimeSlots(body: GetTimeSlotsRequestDto): Array<TDayTimetable> {
+    const dayTimetables: Array<TDayTimetable> = [];
     const startDay: DateTime = DateTime.fromFormat(
       body.start_day_identifier,
       'yyyyMMdd',
@@ -127,7 +65,7 @@ export class SalonsService {
         body.is_ignore_workhour,
       );
 
-      const dayTimetable: DayTimetable = {
+      const dayTimetable: TDayTimetable = {
         start_of_day: currentDay.toSeconds(),
         day_modifier: currentDay.weekday,
         is_day_off: isDayOff,
@@ -189,7 +127,7 @@ export class SalonsService {
   private getWorkHourForDay(date: DateTime): TWorkHour {
     // Luxon: Monday = 1, …, Sunday = 7
     // workhours.json: Sunday = 1, Monday = 2, …, Saturday = 7
-    const mappedWeekday: EDayModifier = (date.weekday % 7) + 1;
+    const mappedWeekday: EDayOfTheWeekModifier = (date.weekday % 7) + 1;
     const workHour: TWorkHour | undefined = this.workHours.find(
       (period: TWorkHour) => period.weekday === mappedWeekday,
     );
@@ -237,8 +175,8 @@ export class SalonsService {
     slotInterval: number,
     serviceDuration: number,
     ignoreSchedule: boolean,
-  ): Timeslot[] {
-    const timeslots: Timeslot[] = [];
+  ): TTimeslot[] {
+    const timeslots: TTimeslot[] = [];
     let candidateTime: DateTime = businessHours.openTime;
 
     while (

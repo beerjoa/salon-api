@@ -2,21 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
-export interface Timeslot {
-  begin_at: number; // Unixstamp seconds
-  end_at: number; // Unixstamp seconds
-  begin_at_formatted: string;
-  end_at_formatted: string;
-}
+import type { TTimeslot } from '##salons/types/timeslot.type';
 
-export class TimeslotDto implements Timeslot {
+export class TimeslotDto implements TTimeslot {
   @ApiProperty({
     description: '시작 시간',
     example: 1713033600,
   })
   @IsNumber()
   @Expose()
-  begin_at: number;
+  begin_at: TTimeslot['begin_at'];
 
   @ApiProperty({
     description: '종료 시간',
@@ -24,7 +19,7 @@ export class TimeslotDto implements Timeslot {
   })
   @IsNumber()
   @Expose()
-  end_at: number;
+  end_at: TTimeslot['end_at'];
 
   @ApiProperty({
     description: '시작 시간 표시 형식',
@@ -32,7 +27,7 @@ export class TimeslotDto implements Timeslot {
   })
   @IsString()
   @Expose()
-  begin_at_formatted: string;
+  begin_at_formatted: TTimeslot['begin_at_formatted'];
 
   @ApiProperty({
     description: '종료 시간 표시 형식',
@@ -40,5 +35,5 @@ export class TimeslotDto implements Timeslot {
   })
   @IsString()
   @Expose()
-  end_at_formatted: string;
+  end_at_formatted: TTimeslot['end_at_formatted'];
 }
