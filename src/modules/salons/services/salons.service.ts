@@ -92,6 +92,7 @@ export class SalonsService {
       days = 1,
       timeslot_interval = 1800, // 30 minutes
       is_ignore_schedule = false,
+      is_ignore_workhour = false,
     } = body;
 
     const dayTimetables: DayTimetable[] = [];
@@ -105,20 +106,31 @@ export class SalonsService {
 
     for (let i = 0; i < days; i++) {
       const currentDay: DateTime = startDay.plus({ days: i });
-      const workHour: IWorkHour = this.getWorkHourForDay(currentDay);
+      let businessHours: TBusinessHours;
+      let isDayOff = false;
+
+      if (is_ignore_workhour) {
+        // workhours 무시: 하루 전체 (00:00 ~ 23:59:59)를 영업시간으로 설정
+        businessHours = {
+          openTime: currentDay.startOf('day'),
+          closeTime: currentDay.endOf('day'),
+        };
+        isDayOff = false;
+      } else {
+        const workHour: IWorkHour = this.getWorkHourForDay(currentDay);
+        isDayOff = workHour.is_day_off;
+        businessHours = this.getBusinessHours(currentDay, workHour);
+      }
+
       const dayTimetable: DayTimetable = {
         start_of_day: currentDay.toSeconds(),
         day_modifier: currentDay.weekday,
-        is_day_off: workHour.is_day_off,
+        is_day_off: isDayOff,
         timeslots: [],
       };
 
       // 휴무일은 타임슬롯이 없음
-      if (!workHour.is_day_off) {
-        const businessHours: TBusinessHours = this.getBusinessHours(
-          currentDay,
-          workHour,
-        );
+      if (!isDayOff) {
         dayTimetable.timeslots = this.calculateTimeSlotsForBusinessHours(
           businessHours,
           timeslot_interval,
