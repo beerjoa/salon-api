@@ -1,6 +1,6 @@
 {
   "name": "salon-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "author": "",
   "private": true,
@@ -29,6 +29,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-fastify": "^11.0.10",
+    "@nestjs/swagger": "^11.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "luxon": "^3.5.0",
@@ -57,6 +58,8 @@
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
+    "eslint-import-resolver-typescript": "^3.8.2",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
@@ -86,6 +89,12 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^#/(.*)$": "<rootDir>/$1",
+      "^#config/(.*)$": "<rootDir>/config/$1",
+      "^#shared/(.*)$": "<rootDir>/shared/$1",
+      "^##salons/(.*)$": "<rootDir>/modules/salons/$1"
+    }
   }
 }
