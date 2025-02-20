@@ -21,6 +21,7 @@
       "#/*": ["src/*"],
       "#config/*": ["src/config/*"],
       "#shared/*": ["src/shared/*"],
+      "#common/*": ["src/common/*"],
       "##salons/*": ["src/modules/salons/*"]
     }
   },

@@ -56,8 +56,6 @@ export class TimeSlotService<
         const newTimeSlot = {
           begin_at: candidateTime.toSeconds(),
           end_at: candidateFinish.toSeconds(),
-          begin_at_formatted: candidateTime.toFormat('yyyyMMdd HH:mm:ss'),
-          end_at_formatted: candidateFinish.toFormat('yyyyMMdd HH:mm:ss'),
         } as TTimeSlot;
         timeslots.push(newTimeSlot);
       }
