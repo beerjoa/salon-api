@@ -24,7 +24,8 @@ export class SalonDayTimetableDto implements ISalonDayTimetable {
 
   @ApiProperty({
     description: '요일 식별자',
-    example: 1,
+    enum: EDayOfTheWeekModifier,
+    example: EDayOfTheWeekModifier.mon,
   })
   @Expose()
   @IsEnum(EDayOfTheWeekModifier)

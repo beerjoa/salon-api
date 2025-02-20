@@ -6,7 +6,9 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsTimeZone,
+  Min,
 } from 'class-validator';
 
 /**
@@ -58,6 +60,7 @@ export class GetTimeSlotsRequestDto implements IRequestBody {
     default: 1800,
   })
   @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   @Expose()
   service_duration: IRequestBody['service_duration'];
@@ -68,6 +71,7 @@ export class GetTimeSlotsRequestDto implements IRequestBody {
     default: 1,
   })
   @IsNumber()
+  @Min(1)
   @IsOptional()
   @Expose()
   days: number = 1;
@@ -78,6 +82,7 @@ export class GetTimeSlotsRequestDto implements IRequestBody {
     default: 1800,
   })
   @IsNumber()
+  @IsPositive()
   @IsOptional()
   @Expose()
   timeslot_interval: number = 1800;
