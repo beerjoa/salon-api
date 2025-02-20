@@ -24,6 +24,7 @@
 1. 프로젝트 루트 디렉토리에서 다음 명령을 실행합니다.
 
 ```bash
+$ cp .env.example .env
 $ npm install
 $ npm run start
 ```
