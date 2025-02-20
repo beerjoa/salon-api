@@ -95,8 +95,6 @@ describe('SalonsService', () => {
               end_at: day
                 .plus({ seconds: mockedBody.service_duration })
                 .toSeconds(),
-              begin_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
-              end_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
             };
           },
         );
@@ -197,8 +195,6 @@ describe('SalonsService', () => {
               end_at: day
                 .plus({ seconds: mockedBody.service_duration })
                 .toSeconds(),
-              begin_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
-              end_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
             };
           },
         );
@@ -303,8 +299,6 @@ describe('SalonsService', () => {
               end_at: day
                 .plus({ seconds: mockedBody.service_duration })
                 .toSeconds(),
-              begin_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
-              end_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
             };
           },
         );
@@ -409,8 +403,6 @@ describe('SalonsService', () => {
               end_at: day
                 .plus({ seconds: mockedBody.service_duration })
                 .toSeconds(),
-              begin_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
-              end_at_formatted: day.toFormat('yyyyMMdd HH:mm:ss'),
             };
           },
         );

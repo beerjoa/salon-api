@@ -11,6 +11,8 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from '#/app.module';
+import { GlobalExceptionFilter } from '#common/filters/global-exception.filter';
+import { HttpExceptionFilter } from '#common/filters/http-exception.filter';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({
@@ -34,6 +36,11 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(
+    //
+    new GlobalExceptionFilter(),
+    new HttpExceptionFilter(),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

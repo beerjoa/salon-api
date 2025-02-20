@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 
 import type {
@@ -62,7 +62,7 @@ export class BusinessHoursService<
    *
    * @param {DateTime} date - 타겟 날짜
    * @returns {IWorkHour} 해당 날짜의 영업시간 데이터
-   * @throws {Error} 영업시간 정보 없음
+   * @throws {BadRequestException} 영업시간 정보 없음
    */
   private getWorkHourForDay(date: DateTime): IWorkHour {
     const mappedWeekday: number = (date.weekday % 7) + 1;
@@ -70,7 +70,7 @@ export class BusinessHoursService<
       (period: IWorkHour) => period.weekday === mappedWeekday,
     );
     if (!workHour) {
-      throw new Error('영업시간 정보가 없습니다.');
+      throw new BadRequestException('영업시간 정보가 없습니다.');
     }
     return workHour;
   }
