@@ -93,6 +93,7 @@
     "moduleNameMapper": {
       "^#/(.*)$": "<rootDir>/$1",
       "^#config/(.*)$": "<rootDir>/config/$1",
+      "^#shared/(.*)$": "<rootDir>/shared/$1",
       "^##salons/(.*)$": "<rootDir>/modules/salons/$1"
     }
   }

@@ -55,6 +55,8 @@ export default tsEslint.config(
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/unbound-method': 'off',
       'no-restricted-imports': ['error', { patterns: ['.*'] }],
       'import/order': [
         'error',

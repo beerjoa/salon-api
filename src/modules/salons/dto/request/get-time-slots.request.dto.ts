@@ -9,8 +9,19 @@ import {
   IsTimeZone,
 } from 'class-validator';
 
-// import from assignment
-interface RequestBody {
+/**
+ * 과제 내 Request Body로 정의된,
+ * 타임슬롯 조회 요청 인터페이스
+ * @interface IRequestBody
+ * @property {string} start_day_identifier - 시작일 식별자
+ * @property {string} timezone_identifier - 타임존 식별자
+ * @property {number} service_duration - 서비스 제공 시간
+ * @property {number} [days] - 시작일을 기준으로 몇 일치를 반환할지 지정
+ * @property {number} [timeslot_interval] - 타임슬롯 간격, 초 단위
+ * @property {boolean} [is_ignore_schedule] - 예약된 이벤트 데이터 고려 여부
+ * @property {boolean} [is_ignore_workhour] - 영업시간 데이터 고려 여부
+ */
+interface IRequestBody {
   start_day_identifier: string;
   timezone_identifier: string;
   service_duration: number;
@@ -20,7 +31,7 @@ interface RequestBody {
   is_ignore_workhour?: boolean;
 }
 
-export class GetTimeSlotsRequestDto implements RequestBody {
+export class GetTimeSlotsRequestDto implements IRequestBody {
   @ApiProperty({
     type: String,
     description: '시작일 식별자',
@@ -29,7 +40,7 @@ export class GetTimeSlotsRequestDto implements RequestBody {
   @IsDateString()
   @IsNotEmpty()
   @Expose()
-  start_day_identifier: string;
+  start_day_identifier: IRequestBody['start_day_identifier'];
 
   @ApiProperty({
     type: String,
@@ -39,7 +50,7 @@ export class GetTimeSlotsRequestDto implements RequestBody {
   @IsTimeZone()
   @IsNotEmpty()
   @Expose()
-  timezone_identifier: string;
+  timezone_identifier: IRequestBody['timezone_identifier'];
 
   @ApiProperty({
     type: Number,
@@ -49,7 +60,7 @@ export class GetTimeSlotsRequestDto implements RequestBody {
   @IsNumber()
   @IsNotEmpty()
   @Expose()
-  service_duration: number;
+  service_duration: IRequestBody['service_duration'];
 
   @ApiPropertyOptional({
     type: Number,

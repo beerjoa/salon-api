@@ -8,18 +8,19 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { TimeslotDto } from '##salons/dto/timeslot.dto';
-import type { TDayTimetable } from '##salons/types/day-timetable.type';
-import { EDayOfTheWeekModifier } from '##salons/types/work-hour.type';
+import { EDayOfTheWeekModifier } from '#shared/types/work-hour.interface';
 
-export class DayTimetableDto implements TDayTimetable {
+import { SalonTimeslotDto } from '##salons/dto/salon-timeslot.dto';
+import type { ISalonDayTimetable } from '##salons/types/salon-day-timetable.interface';
+
+export class SalonDayTimetableDto implements ISalonDayTimetable {
   @ApiProperty({
     description: '시작일 식별자',
     example: 1713033600,
   })
   @Expose()
   @IsNumber()
-  start_of_day: number;
+  start_of_day: ISalonDayTimetable['start_of_day'];
 
   @ApiProperty({
     description: '요일 식별자',
@@ -27,7 +28,7 @@ export class DayTimetableDto implements TDayTimetable {
   })
   @Expose()
   @IsEnum(EDayOfTheWeekModifier)
-  day_modifier: number;
+  day_modifier: ISalonDayTimetable['day_modifier'];
 
   @ApiProperty({
     description: '영업일 여부',
@@ -35,16 +36,16 @@ export class DayTimetableDto implements TDayTimetable {
   })
   @Expose()
   @IsBoolean()
-  is_day_off: boolean;
+  is_day_off: ISalonDayTimetable['is_day_off'];
 
   @ApiProperty({
     description: '타임슬롯 배열',
-    type: TimeslotDto,
+    type: SalonTimeslotDto,
     isArray: true,
   })
   @Expose()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => TimeslotDto)
-  timeslots: TimeslotDto[];
+  @Type(() => SalonTimeslotDto)
+  timeslots: ISalonDayTimetable['timeslots'];
 }
