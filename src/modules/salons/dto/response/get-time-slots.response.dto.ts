@@ -1,6 +1,6 @@
-import { DayTimetableDto } from 'src/modules/salons/dto/day-timetable.dto';
+import { SalonDayTimetableDto } from '##salons/dto/salon-day-timetable.dto';
 
 /**
  * DTO for returning time slots data with day timetables
  */
-export class GetTimeSlotsResponseDto extends Array<DayTimetableDto> {}
+export class GetTimeSlotsResponseDto extends Array<SalonDayTimetableDto> {}

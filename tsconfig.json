@@ -14,9 +14,15 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "#/*": ["src/*"],
+      "#config/*": ["src/config/*"],
+      "#shared/*": ["src/shared/*"],
+      "##salons/*": ["src/modules/salons/*"]
+    }
   },
   "include": [
     "src/**/*",
