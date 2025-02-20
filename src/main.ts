@@ -1,17 +1,18 @@
 import compress from '@fastify/compress';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter({
     exposeHeadRoutes: true,
-    logger: true,
+    logger: false,
   });
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -29,6 +30,24 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector), {
+      enableImplicitConversion: true,
+      excludeExtraneousValues: true,
+      exposeUnsetFields: false,
+    }),
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }
